@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #0a0a0a 0%, #0f0f23 50%, #1a0b2e 100%);
+  color: #ffffff;
+  min-height: 100vh;
+  animation: gradientShift 45s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background: linear-gradient(135deg, #0a0a0a 0%, #0f0f23 50%, #1a0b2e 100%);
+  }
+  25% {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0b2e 50%, #0f0f23 100%);
+  }
+  50% {
+    background: linear-gradient(135deg, #0a0a0a 0%, #0f0f23 50%, #1a0b2e 100%);
+  }
+  75% {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0b2e 50%, #0f0f23 100%);
+  }
+}
+
+@keyframes starryTwinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes floatingStars {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(180deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(360deg);
+  }
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Animated background elements - Higher intensity, lower spread */
+.starry-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 40px 70px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 90px 40px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 130px 80px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 160px 30px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 200px 60px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 250px 20px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 300px 90px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 350px 50px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 400px 10px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 450px 70px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 500px 30px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 550px 80px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 600px 40px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 650px 90px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 700px 20px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 750px 60px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 800px 10px, #22d3ee, transparent);
+  background-repeat: repeat;
+  background-size: 150px 75px;
+  animation: floatingStars 60s linear infinite;
+  opacity: 0.8;
+}
+
+.starry-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(1px 1px at 50px 50px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 100px 20px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 150px 60px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 200px 10px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 250px 40px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 300px 80px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 350px 30px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 400px 70px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 450px 20px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 500px 50px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 550px 90px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 600px 40px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 650px 10px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 700px 60px, #22d3ee, transparent),
+    radial-gradient(1px 1px at 750px 30px, #a78bfa, transparent),
+    radial-gradient(1px 1px at 800px 80px, #22d3ee, transparent);
+  background-repeat: repeat;
+  background-size: 180px 90px;
+  animation: floatingStars 50s linear infinite reverse;
+  opacity: 0.6;
+}
