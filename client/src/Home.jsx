@@ -151,8 +151,7 @@ const Home = () => {
       formData.append('image', file);
 
       // Upload to server
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-      const response = await fetch(`${API_URL}/upload`, {
+      const response = await fetch('https://pixeltruth-ai-deepfake-image-detector.onrender.com/', {
         method: 'POST',
         body: formData,
       });
