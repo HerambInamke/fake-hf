@@ -151,7 +151,7 @@ const Home = () => {
       formData.append('image', file);
 
       // Upload to server
-      const response = await fetch('https://pixeltruth-ai-deepfake-image-detector.onrender.com/', {
+      const response = await fetch('https://pixeltruth-ai-deepfake-image-detector.onrender.com/upload', {
         method: 'POST',
         body: formData,
       });
