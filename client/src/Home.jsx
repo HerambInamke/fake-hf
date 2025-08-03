@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Home = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -8,6 +8,14 @@ const Home = () => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [uploadResult, setUploadResult] = useState(null);
   const [error, setError] = useState(null);
+  const [isContactOpen, setIsContactOpen] = useState(false);
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -212,6 +220,44 @@ const Home = () => {
     }
   };
 
+  // Contact form handlers
+  const handleContactInputChange = (e) => {
+    const { name, value } = e.target;
+    setContactForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      // Here you would typically send the form data to your email service
+      // For now, we'll simulate a successful submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Reset form
+      setContactForm({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      
+      // Close modal
+      setIsContactOpen(false);
+      
+      // You could show a success message here
+      alert('Thank you for your message! We\'ll get back to you soon.');
+    } catch (error) {
+      alert('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // Draw bounding boxes when results are available
   useEffect(() => {
     if (uploadResult && uploadResult.boundingBoxes && uploadedImageUrl) {
@@ -226,6 +272,22 @@ const Home = () => {
       initial="hidden"
       animate="visible"
     >
+      {/* Question Mark Button */}
+      <motion.button
+        onClick={() => setIsContactOpen(true)}
+        className="fixed top-6 right-6 z-50 w-12 h-12 bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 group"
+        style={{ boxShadow: '0 0 30px 0 #a78bfa, 0 0 60px 0 #a78bfa40' }}
+        whileHover={{ 
+          scale: 1.1,
+          boxShadow: '0 0 40px 0 #a78bfa, 0 0 80px 0 #a78bfa50'
+        }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ duration: 0.2 }}
+      >
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </motion.button>
       {/* Animated Starry background effect - focused around upload area */}
       <div className="absolute inset-0">
         <motion.div 
@@ -680,6 +742,144 @@ const Home = () => {
           </div>
         </div>
       </motion.footer>
+
+      {/* Contact Modal */}
+      <AnimatePresence>
+        {isContactOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsContactOpen(false)}
+            />
+            
+            {/* Modal */}
+            <motion.div
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-[#111827] border-l border-[#a78bfa] shadow-2xl z-50 overflow-y-auto"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            >
+              <div className="p-6">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-white">Report a Bug</h2>
+                  <motion.button
+                    onClick={() => setIsContactOpen(false)}
+                    className="w-8 h-8 bg-[#374151] rounded-full flex items-center justify-center hover:bg-[#4b5563] transition-colors duration-200"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </motion.button>
+                </div>
+
+                {/* Form */}
+                <form onSubmit={handleContactSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={contactForm.name}
+                      onChange={handleContactInputChange}
+                      required
+                      className="w-full px-3 py-2 bg-[#1f2937] border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#a78bfa] focus:border-transparent transition-all duration-200"
+                      placeholder="Your name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={contactForm.email}
+                      onChange={handleContactInputChange}
+                      required
+                      className="w-full px-3 py-2 bg-[#1f2937] border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#a78bfa] focus:border-transparent transition-all duration-200"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Subject *
+                    </label>
+                    <input
+                      type="text"
+                      name="subject"
+                      value={contactForm.subject}
+                      onChange={handleContactInputChange}
+                      required
+                      className="w-full px-3 py-2 bg-[#1f2937] border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#a78bfa] focus:border-transparent transition-all duration-200"
+                      placeholder="Brief description of the issue"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Message *
+                    </label>
+                    <textarea
+                      name="message"
+                      value={contactForm.message}
+                      onChange={handleContactInputChange}
+                      required
+                      rows={6}
+                      className="w-full px-3 py-2 bg-[#1f2937] border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#a78bfa] focus:border-transparent transition-all duration-200 resize-none"
+                      placeholder="Please describe the bug in detail..."
+                    />
+                  </div>
+
+                  <motion.button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-3 bg-gradient-to-r from-[#a78bfa] to-[#8b5cf6] text-white font-semibold rounded-md hover:from-[#8b5cf6] hover:to-[#7c3aed] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{ boxShadow: '0 0 20px 0 #a78bfa30' }}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center justify-center">
+                        <motion.div
+                          className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        />
+                        <span className="ml-2">Sending...</span>
+                      </div>
+                    ) : (
+                      'Send Message'
+                    )}
+                  </motion.button>
+                </form>
+
+                {/* Additional Info */}
+                <div className="mt-6 p-4 bg-[#1f2937] rounded-md border border-gray-600">
+                  <h3 className="text-sm font-semibold text-white mb-2">What to include:</h3>
+                  <ul className="text-xs text-gray-300 space-y-1">
+                    <li>• Steps to reproduce the issue</li>
+                    <li>• Expected vs actual behavior</li>
+                    <li>• Browser/device information</li>
+                    <li>• Screenshots if applicable</li>
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
