@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import EducationalContent from "./components/EducationalContent";
+import InteractiveCards from "./components/InteractiveCards";
 
 const Home = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -9,6 +11,8 @@ const Home = () => {
   const [uploadResult, setUploadResult] = useState(null);
   const [error, setError] = useState(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const [contactForm, setContactForm] = useState({
     name: '',
     email: '',
@@ -153,6 +157,7 @@ const Home = () => {
       setUploadedFile(file);
       createImagePreview(file);
       setIsUploading(true);
+      setIsAnalyzing(true);
       
       // Create FormData for upload
       const formData = new FormData();
@@ -177,6 +182,7 @@ const Home = () => {
       setUploadedImageUrl(null);
     } finally {
       setIsUploading(false);
+      setIsAnalyzing(false);
     }
   };
 
@@ -267,27 +273,136 @@ const Home = () => {
 
   return (
     <motion.div 
-      className="min-h-screen w-full bg-gradient-to-br from-black via-purple-900/10 to-blue-900/10 flex flex-col items-center justify-start relative overflow-hidden starry-bg"
+      className={`min-h-screen w-full bg-gradient-to-br ${darkMode ? 'from-black via-purple-900/10 to-blue-900/10' : 'from-blue-50 via-indigo-100/50 to-purple-100/30'} flex flex-col items-center justify-start relative overflow-hidden starry-bg transition-colors duration-300`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      {/* Question Mark Button */}
-      <motion.button
-        onClick={() => setIsContactOpen(true)}
-        className="fixed top-6 right-6 z-50 w-12 h-12 bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 group"
-        style={{ boxShadow: '0 0 30px 0 #a78bfa, 0 0 60px 0 #a78bfa40' }}
-        whileHover={{ 
-          scale: 1.1,
-          boxShadow: '0 0 40px 0 #a78bfa, 0 0 80px 0 #a78bfa50'
-        }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ duration: 0.2 }}
+      {/* Glassy Navbar */}
+      <motion.nav 
+        className={`fixed top-0 left-0 right-0 z-50 ${darkMode ? 'bg-gray-900/70' : 'bg-white/70'} backdrop-blur-lg border-b ${darkMode ? 'border-indigo-500/20' : 'border-white/20'} shadow-lg transition-all duration-300`}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.2, type: "spring", stiffness: 120 }}
       >
-        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </motion.button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <motion.div 
+                className={`text-2xl font-bold ${darkMode ? 'text-indigo-300' : 'text-indigo-700'} transition-colors duration-300`}
+                whileHover={{ scale: 1.05 }}
+              >
+                PixelTruth
+              </motion.div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className={`p-2 rounded-full ${darkMode ? 'bg-indigo-700 text-yellow-300' : 'bg-indigo-200 text-indigo-800'} transition-colors duration-300`}
+                aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {darkMode ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                  </svg>
+                )}
+              </button>
+              <button 
+                onClick={() => setIsContactOpen(true)}
+                className={`px-4 py-2 ${darkMode ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-600 hover:bg-indigo-700'} text-white rounded-lg transition-colors`}
+              >
+                Contact Us
+              </button>
+            </div>
+          </div>
+        </div>
+      </motion.nav>
+      {/* Main Dashboard Content */}
+      <div className="pt-20 pb-12 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left column - Upload and Info */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Upload Area - Clean Dashboard Style */}
+            <motion.div 
+              className="w-full relative z-10"
+              variants={uploadBoxVariants}
+            >
+              <div 
+                className={`p-8 rounded-2xl ${darkMode ? 'bg-gray-800/40' : 'bg-white/80'} backdrop-blur-md border ${darkMode ? 'border-indigo-500/30' : 'border-white/20'} shadow-xl transition-all duration-300 ${isDragOver ? 'border-purple-500 shadow-purple-500/30' : ''}`}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragOver(true);
+                }}
+                onDragLeave={() => setIsDragOver(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setIsDragOver(false);
+                  const file = e.dataTransfer.files[0];
+                  if (file) handleFileUpload(file);
+                }}
+              >
+                <h2 className={`text-2xl font-semibold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Image Analysis Dashboard</h2>
+                <p className={`mb-6 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  Upload an image to analyze its authenticity and detect potential deepfakes.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+          
+          {/* Right column - Results and Stats */}
+          <div className="lg:col-span-5 space-y-6">
+            <motion.div 
+              className={`p-6 rounded-2xl ${darkMode ? 'bg-gray-800/40' : 'bg-white/80'} backdrop-blur-md border ${darkMode ? 'border-indigo-500/30' : 'border-white/20'} shadow-xl transition-all duration-300`}
+              variants={cardVariants}
+            >
+              <h3 className={`text-xl font-semibold mb-3 ${darkMode ? 'text-white' : 'text-gray-800'}`}>Analysis Results</h3>
+              <div className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                {uploadResult ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span>Authenticity Score:</span>
+                      <span className="font-bold text-indigo-600">{uploadResult.score}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div 
+                        className="bg-indigo-600 h-2.5 rounded-full" 
+                        style={{ width: `${uploadResult.score}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ) : (
+                  <p>Upload an image to see analysis results here.</p>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+
+      {/* Educational Content Section */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+        <motion.h2 
+          className={`text-3xl font-bold mb-8 text-center ${darkMode ? 'text-white' : 'text-gray-800'}`}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          Learn About Deepfakes
+        </motion.h2>
+        
+        <div className="mb-12">
+          <EducationalContent darkMode={darkMode} />
+        </div>
+        
+        <div className="mb-12">
+          <InteractiveCards darkMode={darkMode} />
+        </div>
+      </div>
+      
       {/* Animated Starry background effect - focused around upload area */}
       <div className="absolute inset-0">
         <motion.div 
@@ -360,7 +475,7 @@ const Home = () => {
 
       {/* Upload Box */}
       <motion.div 
-        className={`w-full max-w-[700px] mx-4 sm:mx-8 bg-[#111827] border-2 border-dashed rounded-xl flex flex-col items-center py-6 sm:py-8 px-4 sm:px-8 mb-8 sm:mb-16 shadow-lg relative z-10 transition-all duration-300 ${
+        className={`w-full max-w-[700px] mx-4 sm:mx-8 ${darkMode ? 'bg-[#0f172a]' : 'bg-[#111827]'} border-2 border-dashed rounded-xl flex flex-col items-center py-6 sm:py-8 px-4 sm:px-8 mb-8 sm:mb-16 shadow-lg relative z-10 transition-all duration-300 ${
           isDragOver 
             ? 'border-[#a78bfa] bg-[#1a1a2e] scale-105' 
             : 'border-[#a78bfa]'
@@ -544,8 +659,21 @@ const Home = () => {
               <span className="text-gray-400">{uploadResult.processingTime}ms</span>
             </div>
           </div>
-
-
+          
+          {/* Loading Indicator */}
+          {isAnalyzing && (
+            <motion.div 
+              className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm rounded-xl z-20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 border-4 border-t-indigo-500 border-r-indigo-500 border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                <p className="mt-4 text-white font-medium">Analyzing image...</p>
+              </div>
+            </motion.div>
+          )}
         </motion.div>
       )}
 
@@ -884,4 +1012,4 @@ const Home = () => {
   );
 };
 
-export default Home; 
+export default Home;

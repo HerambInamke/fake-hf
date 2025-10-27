@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  client:
+    build: ./client
+    ports:
+      - "3000:80"
+    depends_on:
+      - server
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    networks:
+      - pixeltruth-network
+
+  server:
+    build: ./server
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+    networks:
+      - pixeltruth-network
+
+networks:
+  pixeltruth-network:
+    driver: bridge
